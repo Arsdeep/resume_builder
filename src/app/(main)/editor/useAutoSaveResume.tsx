@@ -1,4 +1,3 @@
-import { useToast } from "@/hooks/use-toast";
 import { useDebounce } from "@/hooks/useDebounce";
 import { ResumeValues } from "@/lib/validation";
 import { useSearchParams } from "next/navigation";
@@ -8,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { fileReplacer } from "@/lib/utils";
 export function useAutoSaveResume(resumeData: ResumeValues) {
   const searchParams = useSearchParams();
-
-  const { toast } = useToast();
 
   const debouncedResumeData = useDebounce(resumeData, 1500);
 
@@ -63,27 +60,6 @@ export function useAutoSaveResume(resumeData: ResumeValues) {
       } catch (error) {
         setIsSavingError(true);
         console.error(error);
-        const { dismiss } = toast({
-          title: "Error saving resume",
-          description: (
-            <div className="flex flex-col gap-2">
-              <p>{(error as Error).message}</p>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  dismiss();
-                  save();
-                }}
-              >
-                Try again
-              </Button>
-            </div>
-          ),
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          dismiss();
-        }, 3000);
       } finally {
         setIsSaving(false);
       }
@@ -108,7 +84,6 @@ export function useAutoSaveResume(resumeData: ResumeValues) {
     isSavingError,
     resumeId,
     searchParams,
-    toast,
   ]);
 
   return {
